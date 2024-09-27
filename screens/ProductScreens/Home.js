@@ -5,29 +5,27 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-import HomeScreen from '../screens/ProductScreens/HomeScreen';   // Updated path
-import Support from '../screens/OrderScreens/Support';            // Updated path
-import Categories from '../screens/ProductScreens/Categories';    // Updated path
+import HomeScreen from '../ProductScreens/HomeScreen';   // Correct path
+import Support from '../OrderScreens/Support';            // Correct path
+import Categories from '../ProductScreens/Categories';    // Correct path
 
 // Create Tab Navigator
 const Tab = createBottomTabNavigator();
 
-// Profile Component (could be moved to a separate file in 'screens' or 'components')
 const Profile = () => (
   <View style={styles.profileContainer}>
     <Text style={styles.profileText}>Hello</Text>
   </View>
 );
 
-// Home Component with Bottom Tab Navigation
 const Home = () => {
   return (
     <Tab.Navigator
       screenOptions={{
-        headerShown: false,                      // No header
-        tabBarShowLabel: false,                  // Hide label
-        tabBarActiveTintColor: '#987952',        // Active color
-        tabBarStyle: {                           // Tab bar styling
+        headerShown: false,
+        tabBarShowLabel: false,
+        tabBarActiveTintColor: '#987952',
+        tabBarStyle: {
           backgroundColor: '#fff',
           borderTopWidth: 0,
           elevation: 0,
@@ -74,7 +72,6 @@ const Home = () => {
   );
 };
 
-// Basic styles for Profile component (Can be moved if needed)
 const styles = StyleSheet.create({
   profileContainer: {
     flex: 1,

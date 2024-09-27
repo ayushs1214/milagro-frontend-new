@@ -1,12 +1,49 @@
-import React, { useState } from 'react';
-import { View, Text, Image, ScrollView, StyleSheet, TouchableOpacity, ImageBackground } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Image, ScrollView, StyleSheet, TouchableOpacity, ImageBackground, ActivityIndicator } from 'react-native';
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
-import data from '../data/data.json'; // Make sure the data.json file is in the correct location
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';  // If you're using axios for API calls
 
 const HomeScreen = () => {
   const navigation = useNavigation();
-  const [products, setProducts] = useState(data.products); // Assuming products are fetched from a local JSON file
+  const [products, setProducts] = useState([]); // Initially an empty array
+  const [loading, setLoading] = useState(true); // Loading state
+  const [error, setError] = useState(null);     // Error state
+
+  useEffect(() => {
+    // Fetch products from API
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get('https://your-api-endpoint/products'); // Replace with your API endpoint
+        setProducts(response.data); // Assuming the data is returned in response.data
+        setLoading(false);
+      } catch (err) {
+        console.error(err);
+        setError("Failed to load products");
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  // Show loading spinner while data is being fetched
+  if (loading) {
+    return (
+      <View style={styles.loaderContainer}>
+        <ActivityIndicator size="large" color="#987952" />
+      </View>
+    );
+  }
+
+  // Show error message if there was an error fetching the data
+  if (error) {
+    return (
+      <View style={styles.loaderContainer}>
+        <Text style={styles.errorText}>{error}</Text>
+      </View>
+    );
+  }
 
   return (
     <ScrollView style={styles.container}>
@@ -29,7 +66,7 @@ const HomeScreen = () => {
       {/* Discount Banner */}
       <View style={styles.bannerContainer}>
         <ImageBackground
-          source={require('../assets/images/feature1.png')} // Corrected path
+          source={require('../../assets/images/feature1.png')} // Make sure this image exists
           style={styles.imageBackground}
         >
           <Text style={styles.bannerText}>Discounts up to 15% for all</Text>
@@ -40,10 +77,9 @@ const HomeScreen = () => {
       <View style={styles.sectionContainer}>
         <Text style={styles.sectionTitle}>Featured Product</Text>
         <ScrollView horizontal>
-          {/* Assuming you're mapping over the product array */}
           {products.map((product, index) => (
             <TouchableOpacity key={index} style={styles.productContainer}>
-              <Image source={require('../assets/images/feature1.png')} style={styles.productImage} />
+              <Image source={{ uri: product.image }} style={styles.productImage} />
               <Text style={styles.productName}>{product.name}</Text>
               <Text style={styles.productDesigner}>Designed by {product.designer}</Text>
             </TouchableOpacity>
@@ -55,14 +91,14 @@ const HomeScreen = () => {
       <View style={styles.sectionContainer}>
         <Text style={styles.sectionTitle}>Bulk Deals and Promotions</Text>
         <TouchableOpacity style={styles.bulkDealContainer}>
-          <Image style={styles.bulkDealImage} source={require('../assets/images/sale.png')} />
+          <Image style={styles.bulkDealImage} source={require('../../assets/images/sale.png')} />
           <View>
             <Text style={styles.bulkDealName}>Semi Glossy Ceramic</Text>
             <Text style={styles.bulkDealCompany}>by Gedhar Trading Company</Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('ProductDetails')} style={styles.bulkDealContainer}>
-          <Image style={styles.bulkDealImage} source={require('../assets/images/sale.png')} />
+          <Image style={styles.bulkDealImage} source={require('../../assets/images/sale.png')} />
           <View>
             <Text style={styles.bulkDealName}>Designer Tiles with Aluminium Profiles</Text>
             <Text style={styles.bulkDealCompany}>by Ishika Tiles</Text>
@@ -157,6 +193,15 @@ const styles = StyleSheet.create({
   bulkDealCompany: {
     color: '#aaa',
     fontSize: 14,
+  },
+  loaderContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorText: {
+    fontSize: 16,
+    color: 'red',
   },
 });
 
