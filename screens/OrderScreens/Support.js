@@ -42,7 +42,7 @@ const Support = () => {
 
         {/* Text Section */}
         <View style={styles.section}>
-          <Image source={require('../assets/images/text-icon.png')} style={styles.icon} />
+          <Image source={require('../assets/images/icon.png')} style={styles.icon} />
           <Text style={styles.description}>
             You can text us at 800-309-2622 — Please allow the system to acknowledge a greeting before providing your details.
           </Text>
@@ -53,7 +53,7 @@ const Support = () => {
 
         {/* Social Section */}
         <View style={styles.section}>
-          <Image source={require('../assets/images/social-icon.png')} style={styles.icon} />
+          <Image source={require('../assets/images/icon.png')} style={styles.icon} />
           <Text style={styles.description}>
             Send us a direct message on <Text style={styles.link} onPress={() => handleLinkPress('https://facebook.com')}>Facebook</Text> or follow us on <Text style={styles.link} onPress={() => handleLinkPress('https://twitter.com')}>Twitter</Text>.
           </Text>

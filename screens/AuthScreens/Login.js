@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { View, ScrollView, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Alert } from 'react-native';
+import { View, ScrollView, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Alert, Platform } from 'react-native';
 import { TextInput, Button, Text, DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
-import axios from 'axios';
+import { useAuth } from '../../contexts/AuthContext';
 
 // Custom theme to apply consistent colors
 const theme = {
@@ -17,11 +17,12 @@ const Login = ({ navigation }) => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const { signIn } = useAuth();
 
   // Basic email validation
   const validateEmail = (email) => /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email);
 
-  // Handle login functionality (Placeholder for backend integration)
+  // Handle login functionality
   const handleLogin = async () => {
     let newErrors = {};
     if (!email) newErrors.email = 'Email is required';
@@ -34,12 +35,11 @@ const Login = ({ navigation }) => {
 
     setLoading(true);
     try {
-      const response = await axios.post('http://localhost:5000/api/login', { email, password });
-      if (response.data.success) {
-        // Navigate to the home screen on successful login
-        navigation.navigate('Home');
+      const { error } = await signIn(email, password);
+      if (error) {
+        Alert.alert('Login Failed', error.message);
       } else {
-        Alert.alert('Login Failed', response.data.message || 'Invalid credentials');
+        navigation.navigate('Home');
       }
     } catch (error) {
       Alert.alert('Error', 'Login failed. Please try again.');
